@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const users = require("./routes/users");
+const userAuthRouter = require("./routes/userAuthRoute");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
@@ -10,7 +10,7 @@ const io = require("socket.io")(http, {
 });
 
 app.use(express.json());
-app.use("/users", users);
+app.use("/auth", userAuthRouter);
 
 app.get("/", (req, res) => {
   res.send({ message: "Home" });
