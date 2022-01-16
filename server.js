@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const userAuthRouter = require("./routes/userAuthRoute");
-const chatRoute = require("./Routes/messagesRoute");
+const chatsRoute = require("./Routes/chatsRoute");
 const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
 const io = require("socket.io")(http, {
@@ -29,7 +29,7 @@ const restricted = (req, res, next) => {
 app.use(express.json());
 app.use(cors());
 app.use("/auth", userAuthRouter);
-app.use("/chat", restricted, chatRoute);
+app.use("/chat", restricted, chatsRoute);
 
 io.on("connection", (socket) => {
   socket.on("send-message", ({ name, message }) => {
