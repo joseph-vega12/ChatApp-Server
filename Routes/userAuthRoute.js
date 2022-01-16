@@ -4,7 +4,6 @@ const pool = require("../db");
 const bycrpt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs/dist/bcrypt");
-
 const checkUsernameIfExists = async (req, res, next) => {
   try {
     const { username } = req.body;
@@ -32,6 +31,10 @@ const makeJwtToken = (user) => {
   };
   return jwt.sign(payload, process.env.JWT_SECRET, option);
 };
+router.get('/user', (req, res) => {
+  res.send({message: "Hello"});
+  console.log(req.userData);
+}); 
 
 router.post("/register", async (req, res) => {
   try {
@@ -55,7 +58,7 @@ router.post("/login", checkUsernameIfExists, async (req, res) => {
     );
     if (verifies) {
       const token = makeJwtToken(req.userData);
-      res.json({ token: token });
+      res.send({ token: token });
     } else {
       res.status(401).json("bad credentials");
     }
