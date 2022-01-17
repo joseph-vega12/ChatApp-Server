@@ -4,6 +4,7 @@ const pool = require("../db");
 const bycrpt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs/dist/bcrypt");
+
 const checkUsernameIfExists = async (req, res, next) => {
   try {
     const { username } = req.body;
@@ -31,10 +32,6 @@ const makeJwtToken = (user) => {
   };
   return jwt.sign(payload, process.env.JWT_SECRET, option);
 };
-router.get('/user', (req, res) => {
-  res.send({message: "Hello"});
-  console.log(req.userData);
-}); 
 
 router.post("/register", async (req, res) => {
   try {
