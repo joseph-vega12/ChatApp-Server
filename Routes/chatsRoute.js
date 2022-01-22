@@ -2,6 +2,15 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
+router.get("/rooms", async (req, res) => {
+  try {
+    const rooms = await pool.query("SELECT * FROM rooms");
+    res.json(rooms.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 router.get("/messages/:id", async (req, res) => {
   try {
     const { id } = req.params;
