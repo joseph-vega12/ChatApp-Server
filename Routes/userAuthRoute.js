@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
       "INSERT INTO users(email, username, password) VALUES($1, $2, $3) RETURNING *",
       [email, username, hashedPassword]
     );
-    const token = makeJwtToken(RegisterUser.rows[0].password);
+    const token = makeJwtToken(RegisterUser.rows[0]);
     res.send({ token: token });
   } catch (error) {
     res.send({ message: error });
