@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
     const token = makeJwtToken(RegisterUser.rows[0]);
     res.send({ token: token });
   } catch (error) {
-    res.send({ message: error });
+    res.send({ message: error.message });
   }
 });
 

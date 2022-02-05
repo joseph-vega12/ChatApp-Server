@@ -1,12 +1,36 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
 router.get("/rooms", async (req, res) => {
   try {
     const rooms = await pool.query("SELECT * FROM rooms");
     res.json(rooms.rows);
   } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.post("/rooms", upload.single("avatar"), async (req, res) => {
+  try {
+    const { roomName } = req.body;
+    const postRoom = await pool.query(
+      "INSERT INTO rooms (roomName, roomImage) VALUES($1, $2) RETURNING *",
+      [roomName, req.file.path]
+    );
+    res.json(postRoom.rows[0]);
+  } catch (err) {
+    console.log(err.message);
     res.status(500).send(err.message);
   }
 });

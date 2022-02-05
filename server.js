@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/auth", userAuthRouter);
 app.use("/chat", restricted, chatsRoute);
+app.use("/uploads", express.static("uploads"));
 
 io.on("connection", (socket) => {
   socket.on("send-message", ({ name, message }) => {
