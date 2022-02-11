@@ -25,7 +25,9 @@ const checkUsernameIfExists = async (req, res, next) => {
 const makeJwtToken = (user) => {
   const payload = {
     id: user.userid,
+    avatar: user.useravatar,
     username: user.username,
+    email: user.email
   };
   const option = {
     expiresIn: "2 hours",

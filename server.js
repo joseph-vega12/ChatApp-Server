@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const userAuthRouter = require("./routes/userAuthRoute");
+const userAuthRouter = require("./Routes/userAuthRoute");
+const usersRoute = require("./Routes/usersRoute");
 const chatsRoute = require("./Routes/chatsRoute");
 const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/auth", userAuthRouter);
 app.use("/chat", restricted, chatsRoute);
+app.use("/users", restricted, usersRoute);
 app.use("/uploads", express.static("uploads"));
 
 io.on("connection", (socket) => {
