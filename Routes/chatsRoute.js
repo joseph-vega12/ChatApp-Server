@@ -14,7 +14,7 @@ const upload = multer({ storage: storage });
 
 router.get("/rooms", async (req, res) => {
   try {
-    const rooms = await pool.query("SELECT * FROM rooms");
+    const rooms = await pool.query("SELECT * FROM rooms ORDER BY id ASC");
     res.json(rooms.rows);
   } catch (err) {
     res.status(500).send(err.message);
@@ -35,11 +35,22 @@ router.post("/rooms", upload.single("avatar"), async (req, res) => {
   }
 });
 
+router.get("/messages", async (req, res) => {
+  try {
+    const getMessages = await pool.query(
+      "SELECT * FROM messages ORDER BY id ASC"
+    );
+    res.json(getMessages.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 router.get("/messages/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const getChat = await pool.query(
-      "SELECT * FROM messages WHERE roomId = ($1)",
+      "SELECT messages.id, users.useravatar, users.username, messages.message, messages.sentbyid, messages.roomid FROM messages INNER JOIN users ON users.userid = messages.sentbyid WHERE roomid = ($1)",
       [id]
     );
     res.json(getChat.rows);
@@ -50,12 +61,25 @@ router.get("/messages/:id", async (req, res) => {
 
 router.post("/messages", async (req, res) => {
   try {
-    const { roomId, sentBy, message } = req.body;
+    const { roomid, sentbyid, message } = req.body;
     const postToChat = await pool.query(
-      "INSERT INTO messages (roomId, sentBy, message) Values($1, $2, $3) RETURNING *",
-      [roomId, sentBy, message]
+      "INSERT INTO messages (roomId, sentbyid, message) Values($1, $2, $3) RETURNING *",
+      [roomid, sentbyid, message]
     );
     res.json(postToChat.rows[0]);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.put("/latest-message", async (req, res) => {
+  try {
+    const { roomid, message } = req.body;
+    const updateLatestMessage = await pool.query(
+      "UPDATE rooms SET latestmessage = ($1) WHERE id = ($2) RETURNING *",
+      [message, roomid]
+    );
+    res.json(updateLatestMessage.rows);
   } catch (err) {
     res.status(500).send(err.message);
   }
