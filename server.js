@@ -35,8 +35,8 @@ app.use("/users", restricted, usersRoute);
 app.use("/uploads", express.static("uploads"));
 
 io.on("connection", (socket) => {
-  socket.on("send-message", ({ name, message }) => {
-    io.emit("send-message", { name, message });
+  socket.on("send-message", (data) => {
+    io.emit("receive-message", data);
   });
 });
 
