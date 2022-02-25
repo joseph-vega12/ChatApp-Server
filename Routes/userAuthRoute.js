@@ -3,7 +3,6 @@ const router = express.Router();
 const pool = require("../db");
 const bycrpt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs/dist/bcrypt");
 
 const checkUsernameIfExists = async (req, res, next) => {
   try {
