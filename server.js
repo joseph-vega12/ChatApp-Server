@@ -38,6 +38,12 @@ io.on("connection", (socket) => {
   socket.on("send-message", (data) => {
     io.emit("receive-message", data);
   });
+  socket.on("fetch-rooms", () => {
+    io.emit("recieve-fetch-rooms");
+  });
+  socket.on("create-room", (data) => {
+    io.emit("recieve-room", data);
+  });
 });
 
 http.listen(4000, function () {
