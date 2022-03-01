@@ -1,17 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db");
-const bycrpt = require("bcryptjs");
+const UserAuthModel = require("../models/user_auth_model");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const checkUsernameIfExists = async (req, res, next) => {
   try {
     const { username } = req.body;
-    const user = await pool.query("SELECT * FROM users WHERE username = ($1)", [
-      username,
-    ]);
-    if (user.rows.length >= 1) {
-      req.userData = user.rows[0];
+    const user = await UserAuthModel.findByUsername(username);
+    if (user.length >= 1) {
+      req.userData = user[0];
       next();
     } else {
       res.status(404).json({ message: "User does not exist" });
@@ -23,8 +21,8 @@ const checkUsernameIfExists = async (req, res, next) => {
 
 const makeJwtToken = (user) => {
   const payload = {
-    id: user.userid,
-    avatar: user.useravatar,
+    id: user.userId,
+    avatar: user.userAvatar,
     username: user.username,
   };
   const option = {
@@ -35,13 +33,13 @@ const makeJwtToken = (user) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { email, username, password } = req.body;
-    const hashedPassword = bycrpt.hashSync(password, 10);
-    const RegisterUser = await pool.query(
-      "INSERT INTO users(email, username, password) VALUES($1, $2, $3) RETURNING *",
-      [email, username, hashedPassword]
-    );
-    const token = makeJwtToken(RegisterUser.rows[0]);
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    const registerUser = await UserAuthModel.insert({
+      username: req.body.username,
+      password: hashedPassword,
+      email: req.body.email,
+    });
+    const token = makeJwtToken(registerUser[0]);
     res.send({ token: token });
   } catch (error) {
     res.send({ message: error.message });

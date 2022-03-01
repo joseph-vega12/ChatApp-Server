@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const userAuthRouter = require("./Routes/userAuthRoute");
-const usersRoute = require("./Routes/usersRoute");
-const chatsRoute = require("./Routes/chatsRoute");
+const userAuthRouter = require("./routes/userAuthRoute");
+const usersRoute = require("./routes/userRoute");
+const chatsRoute = require("./routes/chatsRoute");
 const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
 const io = require("socket.io")(http, {
@@ -46,6 +46,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(process.env.PORT || 5000, function () {
+http.listen(process.env.PORT || 4000, () => {
   console.log("listening on port 4000");
 });
