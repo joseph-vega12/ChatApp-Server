@@ -46,6 +46,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(process.env.PORT || 4000, () => {
+http.listen(4000, () => {
   console.log("listening on port 4000");
 });
