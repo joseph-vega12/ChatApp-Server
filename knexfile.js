@@ -28,7 +28,7 @@ module.exports = {
       max: 10,
     },
     migrations: {
-      tableName: "./database/migrations",
+      directory: "./database/migrations",
     },
   },
 };
