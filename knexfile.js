@@ -5,7 +5,7 @@ require("dotenv").config();
  */
 module.exports = {
   development: {
-    client: process.env.POSTGRES_CLIENT,
+    client: "pg",
     connection: {
       database: process.env.POSTGRES_DATABASE,
       user: process.env.POSTGRES_USER,
@@ -21,14 +21,14 @@ module.exports = {
   },
 
   production: {
-    client: process.env.POSTGRES_CLIENT,
+    client: "pg",
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
-      tableName: "knex_migrations",
+      tableName: "./database/migrations",
     },
   },
 };

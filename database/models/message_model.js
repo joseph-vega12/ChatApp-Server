@@ -1,4 +1,4 @@
-const db = require("../db");
+const db = require("../dbConfig");
 module.exports = { find, findById, insert };
 
 function find() {
