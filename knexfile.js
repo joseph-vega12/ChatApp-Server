@@ -21,11 +21,11 @@ module.exports = {
   },
 
   production: {
-    client: "postgresql",
+    client: process.env.POSTGRES_CLIENT,
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
+      database: process.env.DATABASE_URL,
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
     },
     pool: {
       min: 2,
