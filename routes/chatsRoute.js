@@ -2,16 +2,7 @@ const express = require("express");
 const router = express.Router();
 const RoomModel = require("../database/models/room_model");
 const MessageModel = require("../database/models/message_model");
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
+const upload = require("../helpers/multer");
 
 router.get("/rooms", async (req, res) => {
   try {
@@ -27,7 +18,7 @@ router.post("/rooms", upload.single("avatar"), async (req, res) => {
     const { roomName } = req.body;
     const postRoom = await RoomModel.insert({
       roomName: roomName,
-      roomImage: req.file.path,
+      roomImage: req.file.location,
     });
     res.json(postRoom[0]);
   } catch (err) {
