@@ -8,7 +8,7 @@ const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONT_END_URL,
     methods: ["GET", "POST"],
   },
 });
