@@ -4,12 +4,13 @@ const cors = require("cors");
 const userAuthRouter = require("./routes/userAuthRoute");
 const usersRoute = require("./routes/userRoute");
 const chatsRoute = require("./routes/chatsRoute");
-const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
-const io = require("socket.io")(http, {
+const http = require("http");
+const socketio = require("socket.io");
+const server = http.createServer(app);
+const io = socketio(server, {
   cors: {
-    origin: process.env.FRONT_END_URL,
-    methods: ["GET", "POST"],
+    origin: "*",
   },
 });
 
@@ -46,6 +47,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log("listening on port 4000");
 });
