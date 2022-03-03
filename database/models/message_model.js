@@ -16,7 +16,8 @@ function findById(roomId) {
       "messages.sentById",
       "messages.roomId"
     )
-    .where("roomId", roomId);
+    .where("roomId", roomId)
+    .orderBy("id", "asc");
 }
 
 function insert(message) {

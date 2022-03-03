@@ -30,7 +30,6 @@ router.post("/rooms", upload.single("avatar"), async (req, res) => {
 router.get("/messages", async (req, res) => {
   try {
     const getMessages = await MessageModel.find();
-    console.log(getMessages);
     res.json(getMessages);
   } catch (err) {
     res.status(500).send(err.message);
