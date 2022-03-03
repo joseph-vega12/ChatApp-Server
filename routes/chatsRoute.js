@@ -22,7 +22,6 @@ router.post("/rooms", upload.single("avatar"), async (req, res) => {
     });
     res.json(postRoom[0]);
   } catch (err) {
-    console.log(err.message);
     res.status(500).send(err.message);
   }
 });
