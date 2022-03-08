@@ -7,15 +7,43 @@ const jwt = require("jsonwebtoken");
 const checkUsernameIfExists = async (req, res, next) => {
   try {
     const { username } = req.body;
-    const user = await UserAuthModel.findByUsername(username);
-    if (user.length >= 1) {
-      req.userData = user[0];
+    const User = await UserAuthModel.findByUsername(username);
+    if (User.length >= 1) {
+      req.userData = User[0];
       next();
     } else {
-      res.status(404).json({ message: "User does not exist" });
+      res.status(404);
     }
   } catch (error) {
     res.status(500).json(error.message);
+  }
+};
+
+const checkUsernameIsUnique = async (req, res, next) => {
+  try {
+    const { username } = req.body;
+    const User = await UserAuthModel.findByUsername(username.toLowerCase());
+    if (!User.length) {
+      next();
+    } else {
+      res.status(409).json({ message: "Username is already taken." });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+const checkEmailIsUnique = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const Email = await UserAuthModel.findByEmail(email.toLowerCase());
+    if (!Email.length) {
+      next();
+    } else {
+      res.status(409).json({ message: "Email is already taken." });
+    }
+  } catch (error) {
+    res.status(500).json(error);
   }
 };
 
@@ -31,20 +59,25 @@ const makeJwtToken = (user) => {
   return jwt.sign(payload, process.env.JWT_SECRET, option);
 };
 
-router.post("/register", async (req, res) => {
-  try {
-    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-    const registerUser = await UserAuthModel.insert({
-      username: req.body.username,
-      password: hashedPassword,
-      email: req.body.email,
-    });
-    const token = makeJwtToken(registerUser[0]);
-    res.send({ token: token });
-  } catch (error) {
-    res.send({ message: error.message });
+router.post(
+  "/register",
+  checkUsernameIsUnique,
+  checkEmailIsUnique,
+  async (req, res) => {
+    try {
+      const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+      const registerUser = await UserAuthModel.insert({
+        username: req.body.username.toLowerCase(),
+        password: hashedPassword,
+        email: req.body.email.toLowerCase(),
+      });
+      const token = makeJwtToken(registerUser[0]);
+      res.send({ token: token });
+    } catch (error) {
+      res.send({ message: error.message });
+    }
   }
-});
+);
 
 router.post("/login", checkUsernameIfExists, async (req, res) => {
   try {
