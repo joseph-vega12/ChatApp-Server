@@ -7,16 +7,16 @@ module.exports = {
   development: {
     client: "pg",
     connection: {
-      database: process.env.POSTGRES_DATABASE,
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DATABASE_DEV,
+      user: process.env.POSTGRES_USER_DEV,
+      password: process.env.POSTGRES_PASSWORD_DEV,
     },
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
-      tableName: "knex_migrations",
+      directory: "./database/migrations",
     },
   },
 

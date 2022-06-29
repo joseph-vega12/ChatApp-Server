@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const http = require("http");
 const socketio = require("socket.io");
 const server = http.createServer(app);
+const port = process.env.PORT_DEV || process.env.PORT;
 const io = socketio(server, {
   cors: {
     origin: "*",
@@ -45,6 +46,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(process.env.PORT, () => {
-  console.log("listening on port 4000");
+server.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });
