@@ -7,8 +7,9 @@ module.exports = {
   development: {
     client: "pg",
     connection: {
-      database: process.env.POSTGRES_DATABASE_DEV,
-      user: process.env.POSTGRES_USER_DEV,
+      host: "db",
+      database: "docker",
+      user: "docker",
       password: process.env.POSTGRES_PASSWORD_DEV,
     },
     pool: {
