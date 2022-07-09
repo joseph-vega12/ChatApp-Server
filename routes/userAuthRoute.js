@@ -12,10 +12,10 @@ const checkUsernameIfExists = async (req, res, next) => {
       req.userData = User[0];
       next();
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json(error);
   }
 };
 
