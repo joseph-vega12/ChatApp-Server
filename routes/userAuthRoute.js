@@ -4,6 +4,30 @@ const UserAuthModel = require("../database/models/user_auth_model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const checkAllFieldsOnRegister = (req, res, next) => {
+  const { username, password, email } = req.body;
+  if (!username) {
+    res.status(400).json({ message: "Username Field is required" });
+  } else if (!password) {
+    res.status(400).json({ message: "Password Field is required" });
+  } else if (!email) {
+    res.status(400).json({ message: "Email Field is required" });
+  } else {
+    next();
+  }
+};
+
+const checkAllFieldsOnLogin = (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username) {
+    res.status(400).json({ message: "Username Field is required" });
+  } else if (!password) {
+    res.status(400).json({ message: "Password Field is required" });
+  } else {
+    next();
+  }
+};
+
 const checkUsernameIfExists = async (req, res, next) => {
   try {
     const { username } = req.body;
@@ -61,6 +85,7 @@ const makeJwtToken = (user) => {
 
 router.post(
   "/register",
+  checkAllFieldsOnRegister,
   checkUsernameIsUnique,
   checkEmailIsUnique,
   async (req, res) => {
@@ -79,21 +104,26 @@ router.post(
   }
 );
 
-router.post("/login", checkUsernameIfExists, async (req, res) => {
-  try {
-    const verifies = bcrypt.compareSync(
-      req.body.password,
-      req.userData.password
-    );
-    if (verifies) {
-      const token = makeJwtToken(req.userData);
-      res.send({ token: token });
-    } else {
-      res.status(401).json("bad credentials");
+router.post(
+  "/login",
+  checkAllFieldsOnLogin,
+  checkUsernameIfExists,
+  async (req, res) => {
+    try {
+      const verifies = bcrypt.compareSync(
+        req.body.password,
+        req.userData.password
+      );
+      if (verifies) {
+        const token = makeJwtToken(req.userData);
+        res.send({ token: token });
+      } else {
+        res.status(401).json("bad credentials");
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
   }
-});
+);
 
 module.exports = router;
