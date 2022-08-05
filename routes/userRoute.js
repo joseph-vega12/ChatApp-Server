@@ -18,10 +18,7 @@ router.put("/:id", upload.single("userAvatar"), async (req, res) => {
     const { id } = req.params;
     const changes = {
       username: req.body.username,
-      userAvatar:
-        req.file === undefined
-          ? await UserModel.findById(id)[0].userAvatar
-          : req.file.location,
+      userAvatar: req.file.location,
     };
     const updateUser = await UserModel.update(id, changes);
     res.json(updateUser[0]);
