@@ -8,8 +8,5 @@ function findById(id) {
 }
 
 function update(id, changes) {
-  return db("users")
-    .update("userAvatar", changes)
-    .where("userId", id)
-    .returning("*");
+  return db("users").update(changes).where("userId", id).returning("*");
 }

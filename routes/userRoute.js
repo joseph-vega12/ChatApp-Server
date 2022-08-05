@@ -16,7 +16,14 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", upload.single("userAvatar"), async (req, res) => {
   try {
     const { id } = req.params;
-    const updateUser = await UserModel.update(id, req.file.location);
+    const changes = {
+      username: req.body.username,
+      userAvatar:
+        req.file === undefined
+          ? await UserModel.findById(id)[0].userAvatar
+          : req.file.location,
+    };
+    const updateUser = await UserModel.update(id, changes);
     res.json(updateUser[0]);
   } catch (err) {
     res.status(500).send(err.message);
