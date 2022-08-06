@@ -1,5 +1,5 @@
 const db = require("../dbConfig");
-module.exports = { findById, update };
+module.exports = { findById, updateUserAvatar, updateUserDetails };
 
 function findById(id) {
   return db("users")
@@ -7,6 +7,13 @@ function findById(id) {
     .where("userId", id);
 }
 
-function update(id, changes) {
+function updateUserAvatar(id, image) {
+  return db("users")
+    .update("userAvatar", image)
+    .where("userId", id)
+    .returning("*");
+}
+
+function updateUserDetails(id, changes) {
   return db("users").update(changes).where("userId", id).returning("*");
 }

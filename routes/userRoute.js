@@ -13,14 +13,24 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", upload.single("userAvatar"), async (req, res) => {
+router.put("/avatar/:id", upload.single("userAvatar"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateUser = await UserModel.updateUserAvatar(id, req.file.location);
+    res.json(updateUser[0]);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.put("/details/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const changes = {
       username: req.body.username,
-      userAvatar: req.file.location,
+      email: req.body.email,
     };
-    const updateUser = await UserModel.update(id, changes);
+    const updateUser = await UserModel.updateUserDetails(id, changes);
     res.json(updateUser[0]);
   } catch (err) {
     res.status(500).send(err.message);

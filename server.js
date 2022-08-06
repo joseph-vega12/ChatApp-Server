@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/auth", userAuthRouter);
 app.use("/chat", restricted, chatsRoute);
-app.use("/users", restricted, usersRoute);
+app.use("/user", restricted, usersRoute);
 
 io.on("connection", (socket) => {
   socket.on("send-message", (data) => {
